@@ -33,6 +33,7 @@ mkdir ThunderstorePackage\Mods
 REM Copy files
 copy "RallyXAutoSplitter\bin\Release\net6.0\RallyXAutoSplitter.dll" "ThunderstorePackage\Mods\" >nul
 copy "README.md" "ThunderstorePackage\" >nul
+copy "Thunderstore\manifest.json" "ThunderstorePackage\" >nul
 copy "Thunderstore\CHANGELOG.md" "ThunderstorePackage\" >nul
 
 REM Generate manifest.json with current version
