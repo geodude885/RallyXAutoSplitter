@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="RallyXAutoSplitter.Tests/RallyXAutoSplitter.Tests.csproj" />
+  <Project Path="RallyXAutoSplitter/RallyXAutoSplitter.csproj" />
+</Solution>
