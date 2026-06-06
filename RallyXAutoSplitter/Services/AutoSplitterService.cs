@@ -30,10 +30,6 @@ public sealed class AutoSplitterService
         short track = race.SelectedTrackIndex;
         short laps = race.SelectedLapCount;
 
-        _logger.Msg($"Track={track}, Laps={laps}");
-        _logger.Msg(
-            $"State: active={_runActive}, expected={_expectedTrack}");
-
         if (laps != 3)
             return;
 
@@ -85,10 +81,6 @@ public sealed class AutoSplitterService
 
     public void RaceEnded(IRaceData race, short winningPlayer)
     {
-        _logger.Msg($"Winner={winningPlayer}");
-        _logger.Msg(
-            $"State: active={_runActive}, expected={_expectedTrack}");
-
         // Park reset / race cancelled
         if (winningPlayer == -1)
         {
