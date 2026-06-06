@@ -46,14 +46,11 @@ public sealed class AutoSplitterService
                 _runActive = true;
                 _expectedTrack = 1;
 
-                // Always start a fresh run
+                // Start a fresh run (no split for track 0)
                 _livesplit.ResetRun();
                 _livesplit.StartTimer();
 
-                // Track 0 is a split
-                _livesplit.Split();
-
-                _logger.Msg("RaceStarted: Track 0");
+                _logger.Msg("RaceStarted: Track 0 - Timer started");
                 break;
 
             case 1:
@@ -72,9 +69,10 @@ public sealed class AutoSplitterService
 
                 _expectedTrack++;
 
+                // Split at the START of tracks 1-4
                 _livesplit.Split();
 
-                _logger.Msg($"RaceStarted: Track {track}");
+                _logger.Msg($"RaceStarted: Track {track} - Split");
                 break;
         }
     }
@@ -104,7 +102,7 @@ public sealed class AutoSplitterService
         if (!_runActive)
             return;
 
-        // Final race completion
+        // Final race completion (track 4 end)
         if (race.SelectedTrackIndex == 4 &&
             race.SelectedLapCount == 3)
         {
@@ -112,7 +110,7 @@ public sealed class AutoSplitterService
             {
                 _livesplit.Split();
 
-                _logger.Msg("RaceEnded: Run completed.");
+                _logger.Msg("RaceEnded: Track 4 completed - Final split.");
             }
             else
             {

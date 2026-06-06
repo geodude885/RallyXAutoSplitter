@@ -18,7 +18,7 @@ public class AutoSplitterServiceTests
     }
 
     [Fact]
-    public void RaceStarted_Track0With3Laps_ShouldResetStartAndSplit()
+    public void RaceStarted_Track0With3Laps_ShouldResetAndStart()
     {
         // Arrange
         var race = CreateRace(trackIndex: 0, lapCount: 3);
@@ -26,10 +26,10 @@ public class AutoSplitterServiceTests
         // Act
         _service.RaceStarted(race);
 
-        // Assert - Track 0 does Reset, Start, and Split
+        // Assert - Track 0 does Reset and Start (NO split)
         Assert.Equal(1, _livesplit.ResetRunCalls);
         Assert.Equal(1, _livesplit.StartTimerCalls);
-        Assert.Equal(1, _livesplit.SplitCalls);
+        Assert.Equal(0, _livesplit.SplitCalls);
     }
 
     [Fact]
@@ -55,11 +55,11 @@ public class AutoSplitterServiceTests
         var race1 = CreateRace(trackIndex: 1, lapCount: 3);
 
         // Act
-        _service.RaceStarted(race0); // Reset + Start + Split (track 0)
+        _service.RaceStarted(race0); // Reset + Start (no split)
         _service.RaceStarted(race1); // Split (track 1)
 
-        // Assert - Should have 2 splits total
-        Assert.Equal(2, _livesplit.SplitCalls);
+        // Assert - Should have 1 split (track 1 start)
+        Assert.Equal(1, _livesplit.SplitCalls);
     }
 
     [Fact]
@@ -70,11 +70,11 @@ public class AutoSplitterServiceTests
         var race2 = CreateRace(trackIndex: 2, lapCount: 3); // Skip track 1
 
         // Act
-        _service.RaceStarted(race0); // Start run
+        _service.RaceStarted(race0); // Start run (no split)
         _service.RaceStarted(race2); // Wrong order - should be ignored
 
-        // Assert - Should only have the track 0 split
-        Assert.Equal(1, _livesplit.SplitCalls);
+        // Assert - No splits (track 0 doesn't split, track 2 is out of sequence)
+        Assert.Equal(0, _livesplit.SplitCalls);
     }
 
     [Fact]
@@ -101,15 +101,15 @@ public class AutoSplitterServiceTests
         var race4 = CreateRace(trackIndex: 4, lapCount: 3);
 
         // Act - Complete a full run sequence
-        _service.RaceStarted(race0); // Reset + Start + Split
+        _service.RaceStarted(race0); // Reset + Start (no split)
         _service.RaceStarted(race1); // Split
         _service.RaceStarted(race2); // Split
         _service.RaceStarted(race3); // Split
         _service.RaceStarted(race4); // Split
         _service.RaceEnded(race4, winningPlayer: 1); // Final split
 
-        // Assert - 6 splits total (tracks 0,1,2,3,4 started + track 4 ended)
-        Assert.Equal(6, _livesplit.SplitCalls);
+        // Assert - 5 splits total (tracks 1,2,3,4 started + track 4 ended)
+        Assert.Equal(5, _livesplit.SplitCalls);
     }
 
     [Fact]
@@ -136,9 +136,9 @@ public class AutoSplitterServiceTests
         _service.RaceStarted(race0First); // Start first run
         _service.RaceStarted(race0Second); // Should be ignored
 
-        // Assert - Only one start, one split
+        // Assert - Only one start, no splits
         Assert.Equal(1, _livesplit.StartTimerCalls);
-        Assert.Equal(1, _livesplit.SplitCalls);
+        Assert.Equal(0, _livesplit.SplitCalls);
     }
 
     [Fact]
@@ -155,8 +155,8 @@ public class AutoSplitterServiceTests
             _service.RaceStarted(race);
         }
 
-        // Assert - 5 splits (one for each track start)
-        Assert.Equal(5, _livesplit.SplitCalls);
+        // Assert - 4 splits (tracks 1-4 start, track 0 doesn't split)
+        Assert.Equal(4, _livesplit.SplitCalls);
     }
 
     private static FakeRaceData CreateRace(short trackIndex, short lapCount)
