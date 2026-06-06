@@ -19,16 +19,11 @@ $modCs = $modCs -replace 'MelonInfo\(typeof\(RallyXAutoSplitter\.Mod\), ".*?", "
 Set-Content "RallyXAutoSplitter\Mod.cs" -Value $modCs -NoNewline
 Write-Host "[OK] Updated Mod.cs" -ForegroundColor Green
 
-# Update manifest.json
-$manifest = @{
-	name = $modName
-	version_number = $version
-	website_url = "https://github.com/geodude885/RallyXAutoSplitter"
-	description = "Automatic LiveSplit integration for RUMBLE race mode - starts timer, splits at track starts, and handles resets"
-	dependencies = @("LavaGang-MelonLoader-0.7.2")
-} | ConvertTo-Json -Depth 10
-
-Set-Content "Thunderstore\manifest.json" -Value $manifest
+# Update manifest.json - just replace the version, keep everything else
+$manifestPath = "Thunderstore\manifest.json"
+$manifestContent = Get-Content $manifestPath -Raw
+$manifestContent = $manifestContent -replace '"version_number"\s*:\s*"[^"]*"', "`"version_number`": `"$version`""
+Set-Content $manifestPath -Value $manifestContent -NoNewline
 Write-Host "[OK] Updated manifest.json" -ForegroundColor Green
 
 Write-Host ""

@@ -10,8 +10,8 @@ if errorlevel 1 (
     exit /b 1
 )
 
-REM Read version from Version.props
-for /f "tokens=2 delims=<>" %%a in ('findstr /C:"<ModVersion>" Version.props') do set MOD_VERSION=%%a
+REM Read version from Version.props using PowerShell
+for /f "usebackq delims=" %%v in (`powershell -NoProfile -Command "([xml](Get-Content 'Version.props')).Project.PropertyGroup.ModVersion"`) do set MOD_VERSION=%%v
 
 echo.
 echo Building RallyXAutoSplitter v%MOD_VERSION% in Release mode...
@@ -69,12 +69,5 @@ echo ========================================
 echo Package created successfully!
 echo ========================================
 echo File: %ZIP_NAME%
-echo.
-echo Next steps:
-echo 1. Create icon.png (256x256) if you haven't
-echo 2. Upload the zip to https://thunderstore.io/
-echo 3. Sign in with GitHub
-echo.
-echo To update version: Edit Version.props
 echo.
 pause
