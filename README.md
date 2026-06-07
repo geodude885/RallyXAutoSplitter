@@ -7,6 +7,7 @@ A [MelonLoader](https://github.com/LavaGang/MelonLoader) mod for RUMBLE that pro
 - **Automatic Timer Control**: Automatically starts, splits, and resets the LiveSplit timer based on race events
 - **Track-based Splitting**: Splits at the start of tracks 1-4, plus a final split when track 4 completes
 - **Smart Reset Logic**: Resets when returning to track selection or when a race ends without a winner
+- **Non-blocking Communication**: TCP commands are sent asynchronously to prevent game lag
 - **TCP Integration**: Communicates with LiveSplit via TCP server component
 
 ## Requirements
@@ -38,6 +39,8 @@ The mod hooks into RUMBLE's race system and:
 - **Splits** when tracks 1, 2, 3, and 4 start
 - **Splits** again when track 4 completes (final split)
 - **Resets** when a race ends without completion or when returning to track selection
+
+All LiveSplit commands are sent asynchronously with a 2-second timeout to prevent game lag if the LiveSplit server is slow or unreachable.
 
 ## Building
 

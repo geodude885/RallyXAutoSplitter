@@ -40,19 +40,35 @@ public class LiveSplitService : ILiveSplitService, IDisposable
     public void StartTimer()
     {
         _logger.Msg("[AUTOSPLITTER] START TIMER");
-        Send("starttimer");
+        SendAsync("starttimer");
     }
 
     public void Split()
     {
         _logger.Msg("[AUTOSPLITTER] SPLIT");
-        Send("split");
+        SendAsync("split");
     }
 
     public void ResetRun()
     {
         _logger.Msg("[AUTOSPLITTER] RESET");
-        Send("reset");
+        SendAsync("reset");
+    }
+
+    private void SendAsync(string command)
+    {
+        // Fire and forget - don't block the game thread
+        Task.Run(() =>
+        {
+            try
+            {
+                Send(command);
+            }
+            catch (Exception ex)
+            {
+                _logger.Warning($"Background send failed for '{command}': {ex.Message}");
+            }
+        });
     }
 
     private void Send(string command)
@@ -81,7 +97,13 @@ public class LiveSplitService : ILiveSplitService, IDisposable
             _client?.Dispose();
 
             _client = _tcpFactory.CreateClient();
-            _client.Connect("127.0.0.1", 16834);
+
+            // Use a short connection timeout to avoid blocking
+            var connectTask = Task.Run(() => _client.Connect("127.0.0.1", 16834));
+            if (!connectTask.Wait(TimeSpan.FromSeconds(2)))
+            {
+                throw new TimeoutException("Connection timeout");
+            }
 
             _writer = new StreamWriter(_client.GetStream())
             {
