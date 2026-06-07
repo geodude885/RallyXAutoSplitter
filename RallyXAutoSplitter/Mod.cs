@@ -2,7 +2,7 @@ using MelonLoader;
 using RallyXAutoSplitter.Adapters;
 using RallyXAutoSplitter.Services;
 
-[assembly: MelonInfo(typeof(RallyXAutoSplitter.Mod), "RallyXAutoSplitter", "1.0.0", "ACutiePi")]
+[assembly: MelonInfo(typeof(RallyXAutoSplitter.Mod), "RallyXAutoSplitter", "1.1.0", "ACutiePi")]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
 
 namespace RallyXAutoSplitter;
