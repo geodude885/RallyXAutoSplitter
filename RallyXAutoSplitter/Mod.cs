@@ -1,5 +1,6 @@
 using MelonLoader;
 using RallyXAutoSplitter.Adapters;
+using RallyXAutoSplitter.Patches;
 using RallyXAutoSplitter.Services;
 
 [assembly: MelonInfo(typeof(RallyXAutoSplitter.Mod), "RallyXAutoSplitter", "1.1.0", "ACutiePi")]
@@ -23,6 +24,7 @@ public class Mod : MelonMod
 
         Logger.Msg($"Connected to LiveSplit Server: {LiveSplitService.EnsureConnected()}");
 
-        HarmonyInstance.PatchAll();
+        HarmonyInstance.PatchAll(typeof(RockRaceStartPatch));
+        HarmonyInstance.PatchAll(typeof(OnMiniGameEndedPatch));
     }
 }

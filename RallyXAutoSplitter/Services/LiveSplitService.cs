@@ -37,6 +37,8 @@ public class LiveSplitService : ILiveSplitService, IDisposable
         _tcpFactory = tcpFactory;
     }
 
+    private readonly SemaphoreSlim _sendLock = new(1, 1);
+
     public void StartTimer()
     {
         _logger.Msg("[AUTOSPLITTER] START TIMER");
@@ -58,11 +60,20 @@ public class LiveSplitService : ILiveSplitService, IDisposable
     private void SendAsync(string command)
     {
         // Fire and forget - don't block the game thread
-        Task.Run(() =>
+        // Use a semaphore to ensure commands are sent in order
+        Task.Run(async () =>
         {
             try
             {
-                Send(command);
+                await _sendLock.WaitAsync();
+                try
+                {
+                    Send(command);
+                }
+                finally
+                {
+                    _sendLock.Release();
+                }
             }
             catch (Exception ex)
             {
@@ -136,6 +147,7 @@ public class LiveSplitService : ILiveSplitService, IDisposable
     public void Dispose()
     {
         GC.SuppressFinalize(this);
+        _sendLock?.Dispose();
         _writer?.Dispose();
         _client?.Dispose();
     }

@@ -14,23 +14,36 @@ A [MelonLoader](https://github.com/LavaGang/MelonLoader) mod for RUMBLE that pro
 
 - RUMBLE (the game)
 - [MelonLoader](https://github.com/LavaGang/MelonLoader) installed
-- [LiveSplit](https://livesplit.org/) with the [LiveSplit Server](https://github.com/LiveSplit/LiveSplit.Server) component enabled
+- [LiveSplit](https://livesplit.org/) with the LiveSplit Server component enabled (see setup below)
 
 ## Installation
 
 1. Ensure MelonLoader is installed in your RUMBLE directory
 2. Download the latest release of RallyXAutoSplitter
 3. Place `RallyXAutoSplitter.dll` in your `RUMBLE/Mods` folder
-4. Configure LiveSplit Server component to listen on `127.0.0.1:16834`
+4. Enable the LiveSplit Server in LiveSplit (see LiveSplit Setup below)
 
 ## LiveSplit Setup
 
-1. Right-click on LiveSplit → Edit Layout
-2. Add "LiveSplit Server" component (under Control)
-3. Configure server settings:
-   - Host: `127.0.0.1`
-   - Port: `16834`
-4. Create 5 splits for your run (tracks 1-4 start + track 4 end)
+**Important**: This mod requires the **LiveSplit TCP Server**, not the LiveSplit WebAssembly server.
+
+### Enable LiveSplit Server
+
+- Configure the server:
+   - Right-click on LiveSplit → **Settings**
+   - Scroll to the bottom and find **LiveSplit Server** options
+   - Set **Server Port** to `16834` (default)
+   - Startup Behaviour should be **Start TCP Server**
+
+### Setup Splits
+
+1. Right-click on LiveSplit → Edit Splits
+2. Create 5 splits for your run:
+   - Track A
+   - Track B 
+   - Track C 
+   - Track D 
+   - Track E
 
 ## How It Works
 
